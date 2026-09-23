@@ -1,1036 +1,1142 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galaxy Shooter</title>
+    <title>GameZone - Gaming Website</title>
 
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
         }
 
         body {
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at top, #172554, #020617 65%);
+            font-family: Arial, Helvetica, sans-serif;
+            background: #080812;
             color: white;
-            font-family: Arial, sans-serif;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(8, 8, 18, 0.95);
             display: flex;
-            justify-content: center;
             align-items: center;
-            overflow: hidden;
+            justify-content: space-between;
+            padding: 0 8%;
+            z-index: 1000;
+            border-bottom: 1px solid #24243d;
         }
 
-        #game-wrapper {
-            width: 100%;
-            max-width: 900px;
-            padding: 15px;
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: #7c4dff;
         }
 
-        #game-container {
-            position: relative;
-            width: 100%;
-            height: 700px;
-            background: #020617;
-            border: 3px solid #38bdf8;
+        .logo span {
+            color: #00e5ff;
+        }
+
+        .menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .menu li a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .menu li a:hover {
+            color: #00e5ff;
+        }
+
+        .login-btn {
+            background: #7c4dff;
+            padding: 10px 20px;
             border-radius: 20px;
-            overflow: hidden;
-            box-shadow:
-                0 0 20px #0ea5e9,
-                inset 0 0 50px #020617;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
         }
 
-        canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
+        .login-btn:hover {
+            background: #00e5ff;
+            color: #080812;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 100vh;
+            padding: 150px 8% 80px;
+            display: flex;
+            align-items: center;
             background:
-                linear-gradient(
-                    to bottom,
-                    #020617,
-                    #0f172a
-                );
+                linear-gradient(90deg, #080812 15%, rgba(8,8,18,0.7), rgba(8,8,18,0.2)),
+                radial-gradient(circle at 80% 50%, #28145e, #080812 55%);
         }
 
-        #hud {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
+        .hero-content {
+            max-width: 650px;
+        }
+
+        .hero h1 {
+            font-size: 65px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #00e5ff;
+        }
+
+        .hero p {
+            color: #b9b9c9;
+            line-height: 1.8;
+            font-size: 17px;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            padding: 14px 28px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .primary-btn {
+            background: #7c4dff;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #00e5ff;
+            color: #080812;
+            transform: translateY(-3px);
+        }
+
+        .secondary-btn {
+            border: 1px solid #55556d;
+            color: white;
+        }
+
+        .secondary-btn:hover {
+            border-color: #00e5ff;
+            color: #00e5ff;
+        }
+
+        /* ================= SECTION ================= */
+
+        section {
+            padding: 90px 8%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .section-title p {
+            color: #9999aa;
+        }
+
+        /* ================= GAMES ================= */
+
+        .games {
+            background: #0d0d19;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .game-card {
+            background: #151522;
+            border: 1px solid #26263b;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            border-color: #7c4dff;
+            box-shadow: 0 10px 40px rgba(124, 77, 255, 0.2);
+        }
+
+        .game-image {
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #28145e, #0b4050);
+        }
+
+        .game-card:nth-child(2) .game-image {
+            background: linear-gradient(135deg, #47152e, #202050);
+        }
+
+        .game-card:nth-child(3) .game-image {
+            background: linear-gradient(135deg, #133f4a, #20204e);
+        }
+
+        .game-card:nth-child(4) .game-image {
+            background: linear-gradient(135deg, #402013, #251653);
+        }
+
+        .game-card:nth-child(5) .game-image {
+            background: linear-gradient(135deg, #103f31, #18225a);
+        }
+
+        .game-card:nth-child(6) .game-image {
+            background: linear-gradient(135deg, #4b102d, #111d42);
+        }
+
+        .game-info {
+            padding: 20px;
+        }
+
+        .game-info h3 {
+            margin-bottom: 8px;
+        }
+
+        .game-info p {
+            color: #9999aa;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .game-meta {
             display: flex;
             justify-content: space-between;
-            gap: 10px;
-            z-index: 5;
-            pointer-events: none;
+            margin-top: 18px;
+            color: #00e5ff;
+            font-size: 13px;
         }
 
-        .hud-box {
-            min-width: 120px;
-            padding: 10px 15px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid #38bdf8;
+        /* ================= FEATURES ================= */
+
+        .features {
+            background: #080812;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            padding: 30px 20px;
+            background: #11111e;
+            border: 1px solid #25253a;
             border-radius: 10px;
             text-align: center;
-            box-shadow: 0 0 10px #0ea5e955;
+            transition: 0.3s;
         }
 
-        .hud-label {
-            display: block;
-            color: #94a3b8;
-            font-size: 12px;
-            margin-bottom: 3px;
+        .feature-card:hover {
+            border-color: #00e5ff;
+            transform: translateY(-5px);
         }
 
-        .hud-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #f8fafc;
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
         }
 
-        #menu {
-            position: absolute;
-            inset: 0;
-            z-index: 10;
+        .feature-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #9999aa;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            background: linear-gradient(135deg, #11112a, #0c2630);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat h3 {
+            font-size: 45px;
+            color: #00e5ff;
+            margin-bottom: 10px;
+        }
+
+        .stat p {
+            color: #aaaabb;
+        }
+
+        /* ================= NEWS ================= */
+
+        .news {
+            background: #0d0d19;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .news-card {
+            background: #151522;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #26263b;
+            transition: 0.3s;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .news-image {
+            height: 160px;
+            background: linear-gradient(135deg, #7c4dff, #00e5ff);
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(2, 6, 23, 0.82);
+            font-size: 40px;
         }
 
-        .menu-card {
-            width: min(90%, 450px);
-            padding: 40px 30px;
-            text-align: center;
-            border: 2px solid #38bdf8;
-            border-radius: 20px;
-            background:
-                linear-gradient(
-                    145deg,
-                    #0f172a,
-                    #111827
-                );
-            box-shadow: 0 0 35px #0284c755;
+        .news-card:nth-child(2) .news-image {
+            background: linear-gradient(135deg, #ff416c, #7c4dff);
         }
 
-        .menu-card h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
-            color: #38bdf8;
-            text-shadow: 0 0 15px #0ea5e9;
+        .news-card:nth-child(3) .news-image {
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
         }
 
-        .menu-card h2 {
-            margin-bottom: 15px;
-            color: #facc15;
+        .news-content {
+            padding: 20px;
         }
 
-        .menu-card p {
-            color: #cbd5e1;
+        .news-content small {
+            color: #00e5ff;
+        }
+
+        .news-content h3 {
+            margin: 10px 0;
+        }
+
+        .news-content p {
+            color: #9999aa;
+            font-size: 14px;
             line-height: 1.6;
-            margin-bottom: 25px;
         }
 
-        button {
-            border: none;
-            outline: none;
-            cursor: pointer;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 10px;
-            padding: 13px 25px;
-            background: linear-gradient(
-                135deg,
-                #0284c7,
-                #2563eb
-            );
-            box-shadow: 0 5px 15px #0284c755;
-            transition: 0.2s;
+        /* ================= COMMUNITY ================= */
+
+        .community {
+            text-align: center;
+            background:
+                radial-gradient(circle at center, #20134b, #080812 65%);
         }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px #0284c799;
-        }
-
-        button:active {
-            transform: scale(0.96);
-        }
-
-        #pause-button {
-            position: absolute;
-            right: 15px;
-            bottom: 15px;
-            z-index: 6;
-            padding: 9px 15px;
-            font-size: 13px;
-        }
-
-        #controls {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            z-index: 6;
-            color: #cbd5e1;
-            font-size: 13px;
-            background: rgba(15, 23, 42, 0.75);
-            padding: 10px 14px;
-            border-radius: 10px;
-        }
-
-        #mobile-controls {
-            display: none;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        #level-message {
-            position: absolute;
-            left: 50%;
-            top: 45%;
-            transform: translate(-50%, -50%);
+        .community h2 {
             font-size: 42px;
-            font-weight: bold;
-            color: #facc15;
-            text-shadow: 0 0 20px #f59e0b;
-            z-index: 8;
-            opacity: 0;
-            pointer-events: none;
+            margin-bottom: 15px;
         }
 
-        @media (max-width: 700px) {
-            #game-container {
-                height: 85vh;
-                min-height: 500px;
-            }
+        .community p {
+            color: #aaaabb;
+            max-width: 650px;
+            margin: auto;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
 
-            .hud-box {
-                min-width: 90px;
-                padding: 7px;
-            }
+        .community-btn {
+            display: inline-block;
+            background: #7c4dff;
+            color: white;
+            padding: 15px 35px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
 
-            .hud-label {
-                font-size: 10px;
-            }
+        .community-btn:hover {
+            background: #00e5ff;
+            color: #080812;
+        }
 
-            .hud-value {
-                font-size: 16px;
-            }
+        /* ================= FOOTER ================= */
 
-            .menu-card h1 {
-                font-size: 36px;
-            }
+        footer {
+            background: #05050b;
+            padding: 60px 8% 20px;
+        }
 
-            #controls {
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #7c4dff;
+            margin-bottom: 15px;
+        }
+
+        .footer-logo span {
+            color: #00e5ff;
+        }
+
+        .footer-about p {
+            color: #888899;
+            line-height: 1.7;
+            max-width: 350px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column a {
+            color: #888899;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: #00e5ff;
+        }
+
+        .copyright {
+            border-top: 1px solid #20202e;
+            padding-top: 20px;
+            text-align: center;
+            color: #666677;
+            font-size: 13px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .menu {
                 display: none;
             }
 
-            #mobile-controls {
-                position: absolute;
-                bottom: 15px;
-                left: 15px;
-                right: 80px;
-                display: flex;
-                justify-content: space-between;
-                z-index: 6;
+            .hero h1 {
+                font-size: 48px;
             }
 
-            #mobile-controls button {
-                width: 65px;
-                height: 50px;
-                padding: 0;
-                font-size: 24px;
-                background: rgba(14, 116, 144, 0.8);
+            .game-grid,
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            #pause-button {
-                width: 55px;
-                height: 50px;
-                padding: 0;
+            .feature-grid,
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            nav {
+                padding: 0 5%;
+            }
+
+            .login-btn {
+                display: none;
+            }
+
+            section {
+                padding: 70px 5%;
+            }
+
+            .hero {
+                padding: 130px 5% 70px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .primary-btn,
+            .secondary-btn {
+                text-align: center;
+            }
+
+            .game-grid,
+            .news-grid,
+            .feature-grid,
+            .stats-grid,
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title h2 {
+                font-size: 30px;
+            }
+
+            .community h2 {
+                font-size: 32px;
+            }
+        }
+
+        /* ================= ANIMATION ================= */
+
+        @keyframes floating {
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content {
+            animation: floating 4s ease-in-out infinite;
+        }
+
+        .glow {
+            text-shadow:
+                0 0 10px #00e5ff,
+                0 0 20px #00e5ff;
         }
     </style>
 </head>
 
 <body>
 
-<div id="game-wrapper">
+    <!-- ================= NAVBAR ================= -->
 
-    <div id="game-container">
+    <nav>
+        <div class="logo">
+            GAME<span>ZONE</span>
+        </div>
 
-        <canvas id="gameCanvas"></canvas>
+        <ul class="menu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#games">Games</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#news">News</a></li>
+            <li><a href="#community">Community</a></li>
+        </ul>
 
-        <div id="hud">
+        <a href="#community" class="login-btn">Join Now</a>
+    </nav>
 
-            <div class="hud-box">
-                <span class="hud-label">SKOR</span>
-                <span class="hud-value" id="score">0</span>
-            </div>
+    <!-- ================= HERO ================= -->
 
-            <div class="hud-box">
-                <span class="hud-label">LEVEL</span>
-                <span class="hud-value" id="level">1</span>
-            </div>
+    <section class="hero" id="home">
 
-            <div class="hud-box">
-                <span class="hud-label">NYAWA</span>
-                <span class="hud-value" id="lives">3</span>
+        <div class="hero-content">
+
+            <h1>
+                ENTER THE
+                <span class="glow">GAMING</span>
+                WORLD
+            </h1>
+
+            <p>
+                Selamat datang di GameZone, tempat para gamer
+                berkumpul untuk menemukan game terbaru, berita
+                gaming, komunitas, dan pengalaman bermain yang seru.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="#games" class="primary-btn">
+                    Explore Games
+                </a>
+
+                <a href="#news" class="secondary-btn">
+                    Latest News
+                </a>
             </div>
 
         </div>
 
-        <div id="menu">
+    </section>
 
-            <div class="menu-card">
+    <!-- ================= GAMES ================= -->
 
-                <h1>🚀</h1>
+    <section class="games" id="games">
 
-                <h1>GALAXY</h1>
+        <div class="section-title">
 
-                <h2>SHOOTER</h2>
+            <h2>Popular Games</h2>
+
+            <p>
+                Temukan berbagai game favorit para gamer.
+            </p>
+
+        </div>
+
+        <div class="game-grid">
+
+            <div class="game-card">
+
+                <div class="game-image">
+                    🎮
+                </div>
+
+                <div class="game-info">
+
+                    <h3>Cyber Arena</h3>
+
+                    <p>
+                        Pertarungan futuristik dengan teknologi
+                        dan senjata canggih.
+                    </p>
+
+                    <div class="game-meta">
+                        <span>Action</span>
+                        <span>★★★★★</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="game-card">
+
+                <div class="game-image">
+                    ⚔️
+                </div>
+
+                <div class="game-info">
+
+                    <h3>Shadow Warriors</h3>
+
+                    <p>
+                        Jadilah warrior terbaik dan kalahkan
+                        semua musuh di arena.
+                    </p>
+
+                    <div class="game-meta">
+                        <span>RPG</span>
+                        <span>★★★★☆</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="game-card">
+
+                <div class="game-image">
+                    🚀
+                </div>
+
+                <div class="game-info">
+
+                    <h3>Galaxy Battle</h3>
+
+                    <p>
+                        Jelajahi luar angkasa dan bertarung
+                        melawan pasukan alien.
+                    </p>
+
+                    <div class="game-meta">
+                        <span>Sci-Fi</span>
+                        <span>★★★★★</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="game-card">
+
+                <div class="game-image">
+                    🔥
+                </div>
+
+                <div class="game-info">
+
+                    <h3>Fire Storm</h3>
+
+                    <p>
+                        Game battle royale dengan arena
+                        yang semakin mengecil.
+                    </p>
+
+                    <div class="game-meta">
+                        <span>Battle Royale</span>
+                        <span>★★★★☆</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="game-card">
+
+                <div class="game-image">
+                    🏎️
+                </div>
+
+                <div class="game-info">
+
+                    <h3>Speed Rush</h3>
+
+                    <p>
+                        Rasakan kecepatan mobil super
+                        dalam balapan ekstrem.
+                    </p>
+
+                    <div class="game-meta">
+                        <span>Racing</span>
+                        <span>★★★★★</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="game-card">
+
+                <div class="game-image">
+                    🧟
+                </div>
+
+                <div class="game-info">
+
+                    <h3>Zombie Night</h3>
+
+                    <p>
+                        Bertahan hidup dari serangan zombie
+                        di kota yang penuh misteri.
+                    </p>
+
+                    <div class="game-meta">
+                        <span>Survival</span>
+                        <span>★★★★☆</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= FEATURES ================= -->
+
+    <section class="features" id="features">
+
+        <div class="section-title">
+
+            <h2>Why GameZone?</h2>
+
+            <p>
+                Semua kebutuhan gaming dalam satu tempat.
+            </p>
+
+        </div>
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">🎮</div>
+
+                <h3>Game Collection</h3>
 
                 <p>
-                    Hancurkan semua meteor dan pesawat musuh.
-                    Kumpulkan skor sebanyak mungkin dan bertahan
-                    sampai level tertinggi!
+                    Temukan banyak game menarik dari
+                    berbagai genre.
                 </p>
 
-                <button id="start-button">
-                    MULAI GAME
-                </button>
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">📰</div>
+
+                <h3>Gaming News</h3>
+
+                <p>
+                    Dapatkan informasi terbaru seputar
+                    dunia game.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">🏆</div>
+
+                <h3>Tournaments</h3>
+
+                <p>
+                    Ikuti turnamen dan tunjukkan kemampuan
+                    gaming kamu.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">👥</div>
+
+                <h3>Community</h3>
+
+                <p>
+                    Bergabung dengan komunitas gamer
+                    dari berbagai tempat.
+                </p>
 
             </div>
 
         </div>
 
-        <div id="level-message">
-            LEVEL UP!
+    </section>
+
+    <!-- ================= STATS ================= -->
+
+    <section class="stats">
+
+        <div class="stats-grid">
+
+            <div class="stat">
+
+                <h3>50K+</h3>
+
+                <p>Active Players</p>
+
+            </div>
+
+
+            <div class="stat">
+
+                <h3>120+</h3>
+
+                <p>Games</p>
+
+            </div>
+
+
+            <div class="stat">
+
+                <h3>300+</h3>
+
+                <p>Tournaments</p>
+
+            </div>
+
+
+            <div class="stat">
+
+                <h3>25K+</h3>
+
+                <p>Community Members</p>
+
+            </div>
+
         </div>
 
-        <div id="controls">
-            ⬅️ ➡️ Bergerak &nbsp; | &nbsp; SPACE Menembak
+    </section>
+
+    <!-- ================= NEWS ================= -->
+
+    <section class="news" id="news">
+
+        <div class="section-title">
+
+            <h2>Gaming News</h2>
+
+            <p>
+                Berita dan informasi gaming terbaru.
+            </p>
+
         </div>
 
-        <div id="mobile-controls">
+        <div class="news-grid">
 
-            <button id="left-button">
-                ◀
-            </button>
+            <div class="news-card">
 
-            <button id="right-button">
-                ▶
-            </button>
+                <div class="news-image">
+                    🎮
+                </div>
+
+                <div class="news-content">
+
+                    <small>GAMING</small>
+
+                    <h3>
+                        Game Baru Hadir Tahun Ini
+                    </h3>
+
+                    <p>
+                        Industri game terus berkembang
+                        dengan berbagai game baru yang
+                        menarik perhatian gamer.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="news-card">
+
+                <div class="news-image">
+                    🏆
+                </div>
+
+                <div class="news-content">
+
+                    <small>ESPORTS</small>
+
+                    <h3>
+                        Turnamen Esports Terbesar
+                    </h3>
+
+                    <p>
+                        Kompetisi esports semakin populer
+                        dan menghadirkan pertandingan
+                        yang sangat kompetitif.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="news-card">
+
+                <div class="news-image">
+                    💻
+                </div>
+
+                <div class="news-content">
+
+                    <small>TECHNOLOGY</small>
+
+                    <h3>
+                        Teknologi Gaming Masa Depan
+                    </h3>
+
+                    <p>
+                        Perkembangan hardware dan teknologi
+                        membuat pengalaman bermain semakin
+                        menarik.
+                    </p>
+
+                </div>
+
+            </div>
 
         </div>
 
-        <button id="pause-button">
-            PAUSE
-        </button>
+    </section>
 
-    </div>
+    <!-- ================= COMMUNITY ================= -->
 
-</div>
+    <section class="community" id="community">
 
-<script>
+        <h2>
+            JOIN THE GAMING COMMUNITY
+        </h2>
 
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+        <p>
+            Temukan teman baru, berdiskusi tentang game,
+            mengikuti turnamen, dan berbagi pengalaman
+            bersama komunitas gamer lainnya.
+        </p>
 
-const gameContainer =
-    document.getElementById("game-container");
+        <a href="#" class="community-btn">
+            Join Community
+        </a>
 
-const menu =
-    document.getElementById("menu");
+    </section>
 
-const startButton =
-    document.getElementById("start-button");
+    <!-- ================= FOOTER ================= -->
 
-const pauseButton =
-    document.getElementById("pause-button");
+    <footer>
 
-const scoreText =
-    document.getElementById("score");
+        <div class="footer-grid">
 
-const levelText =
-    document.getElementById("level");
+            <div class="footer-about">
 
-const livesText =
-    document.getElementById("lives");
+                <div class="footer-logo">
+                    GAME<span>ZONE</span>
+                </div>
 
-const levelMessage =
-    document.getElementById("level-message");
+                <p>
+                    Website gaming modern untuk para gamer
+                    yang ingin menemukan game, berita,
+                    komunitas, dan berbagai aktivitas gaming.
+                </p>
 
-const leftButton =
-    document.getElementById("left-button");
+            </div>
 
-const rightButton =
-    document.getElementById("right-button");
 
-let gameWidth = 800;
-let gameHeight = 700;
+            <div class="footer-column">
 
-let gameRunning = false;
-let gamePaused = false;
+                <h3>Menu</h3>
 
-let score = 0;
-let lives = 3;
-let level = 1;
+                <ul>
 
-let lastTime = 0;
+                    <li>
+                        <a href="#home">Home</a>
+                    </li>
 
-let enemyTimer = 0;
-let enemyInterval = 900;
+                    <li>
+                        <a href="#games">Games</a>
+                    </li>
 
-let shotTimer = 0;
-let shotInterval = 220;
+                    <li>
+                        <a href="#features">Features</a>
+                    </li>
 
-let levelTimer = 0;
+                    <li>
+                        <a href="#news">News</a>
+                    </li>
 
-let keys = {
-    left: false,
-    right: false,
-    shoot: false
-};
+                </ul>
 
-let bullets = [];
-let enemies = [];
-let particles = [];
-let stars = [];
-let powerUps = [];
+            </div>
 
-const player = {
-    x: 400,
-    y: 620,
-    width: 45,
-    height: 50,
-    speed: 380,
-    color: "#38bdf8",
-    shield: 0,
-    firePower: 1
-};
 
-function resizeCanvas() {
+            <div class="footer-column">
 
-    const rect =
-        gameContainer.getBoundingClientRect();
+                <h3>Games</h3>
 
-    const oldWidth = gameWidth;
-    const oldHeight = gameHeight;
+                <ul>
 
-    gameWidth = rect.width;
-    gameHeight = rect.height;
+                    <li>
+                        <a href="#">Action</a>
+                    </li>
 
-    canvas.width = gameWidth;
-    canvas.height = gameHeight;
+                    <li>
+                        <a href="#">RPG</a>
+                    </li>
 
-    if (oldWidth > 0) {
-        player.x =
-            (player.x / oldWidth) * gameWidth;
-    }
+                    <li>
+                        <a href="#">Racing</a>
+                    </li>
 
-    player.y =
-        gameHeight - 80;
-}
+                    <li>
+                        <a href="#">Survival</a>
+                    </li>
 
-function createStars() {
+                </ul>
 
-    stars = [];
+            </div>
 
-    for (let i = 0; i < 100; i++) {
 
-        stars.push({
-            x: Math.random() * gameWidth,
-            y: Math.random() * gameHeight,
-            size: Math.random() * 2 + 1,
-            speed: Math.random() * 80 + 20,
-            alpha: Math.random() * 0.8 + 0.2
-        });
-    }
-}
+            <div class="footer-column">
 
-function drawStars(delta) {
+                <h3>Social</h3>
 
-    for (const star of stars) {
+                <ul>
 
-        star.y += star.speed * delta;
+                    <li>
+                        <a href="#">Instagram</a>
+                    </li>
 
-        if (star.y > gameHeight) {
-            star.y = 0;
-            star.x = Math.random() * gameWidth;
-        }
+                    <li>
+                        <a href="#">YouTube</a>
+                    </li>
 
-        ctx.globalAlpha = star.alpha;
+                    <li>
+                        <a href="#">Discord</a>
+                    </li>
 
-        ctx.fillStyle = "#ffffff";
+                    <li>
+                        <a href="#">TikTok</a>
+                    </li>
 
-        ctx.beginPath();
+                </ul>
 
-        ctx.arc(
-            star.x,
-            star.y,
-            star.size,
-            0,
-            Math.PI * 2
-        );
+            </div>
 
-        ctx.fill();
-    }
+        </div>
 
-    ctx.globalAlpha = 1;
-}
+        <div class="copyright">
 
-function drawPlayer() {
+            © 2026 GameZone. All Rights Reserved.
 
-    ctx.save();
+        </div>
 
-    ctx.translate(
-        player.x,
-        player.y
-    );
+    </footer>
 
-    if (player.shield > 0) {
-
-        ctx.strokeStyle = "#22d3ee";
-        ctx.lineWidth = 4;
-
-        ctx.shadowColor = "#22d3ee";
-        ctx.shadowBlur = 15;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            0,
-            0,
-            38,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.stroke();
-    }
-
-    ctx.shadowColor = "#38bdf8";
-    ctx.shadowBlur = 15;
-
-    ctx.fillStyle = "#38bdf8";
-
-    ctx.beginPath();
-
-    ctx.moveTo(0, -28);
-    ctx.lineTo(-23, 22);
-    ctx.lineTo(0, 14);
-    ctx.lineTo(23, 22);
-
-    ctx.closePath();
-
-    ctx.fill();
-
-    ctx.fillStyle = "#e0f2fe";
-
-    ctx.beginPath();
-
-    ctx.moveTo(0, -18);
-    ctx.lineTo(-8, 5);
-    ctx.lineTo(8, 5);
-
-    ctx.closePath();
-
-    ctx.fill();
-
-    ctx.fillStyle = "#f97316";
-
-    ctx.beginPath();
-
-    ctx.moveTo(-9, 20);
-    ctx.lineTo(0, 38);
-    ctx.lineTo(9, 20);
-
-    ctx.closePath();
-
-    ctx.fill();
-
-    ctx.restore();
-}
-
-function shoot() {
-
-    if (player.firePower === 1) {
-
-        bullets.push({
-            x: player.x,
-            y: player.y - 28,
-            width: 5,
-            height: 18,
-            speed: 600,
-            color: "#facc15"
-        });
-
-    } else {
-
-        bullets.push({
-            x: player.x - 13,
-            y: player.y - 28,
-            width: 5,
-            height: 18,
-            speed: 600,
-            color: "#22d3ee"
-        });
-
-        bullets.push({
-            x: player.x + 13,
-            y: player.y - 28,
-            width: 5,
-            height: 18,
-            speed: 600,
-            color: "#22d3ee"
-        });
-    }
-}
-
-function updateBullets(delta) {
-
-    for (let i = bullets.length - 1; i >= 0; i--) {
-
-        const bullet = bullets[i];
-
-        bullet.y -= bullet.speed * delta;
-
-        if (bullet.y < -30) {
-
-            bullets.splice(i, 1);
-        }
-    }
-}
-
-function drawBullets() {
-
-    for (const bullet of bullets) {
-
-        ctx.save();
-
-        ctx.fillStyle = bullet.color;
-
-        ctx.shadowColor = bullet.color;
-        ctx.shadowBlur = 12;
-
-        ctx.fillRect(
-            bullet.x - bullet.width / 2,
-            bullet.y,
-            bullet.width,
-            bullet.height
-        );
-
-        ctx.restore();
-    }
-}
-
-function createEnemy() {
-
-    const size =
-        Math.random() * 20 + 30;
-
-    const type =
-        Math.random() < 0.15
-            ? "strong"
-            : "normal";
-
-    const enemy = {
-
-        x:
-            Math.random() *
-            (gameWidth - size * 2) +
-            size,
-
-        y:
-            -size,
-
-        width: size,
-        height: size,
-
-        speed:
-            80 +
-            Math.random() * 80 +
-            level * 15,
-
-        health:
-            type === "strong"
-                ? 3
-                : 1,
-
-        maxHealth:
-            type === "strong"
-                ? 3
-                : 1,
-
-        type: type,
-
-        color:
-            type === "strong"
-                ? "#a855f7"
-                : "#ef4444",
-
-        rotation:
-            Math.random() * Math.PI * 2,
-
-        rotationSpeed:
-            Math.random() * 3 - 1.5
-    };
-
-    enemies.push(enemy);
-}
-
-function drawEnemy(enemy) {
-
-    ctx.save();
-
-    ctx.translate(
-        enemy.x,
-        enemy.y
-    );
-
-    enemy.rotation +=
-        enemy.rotationSpeed * 0.01;
-
-    ctx.rotate(enemy.rotation);
-
-    ctx.shadowColor = enemy.color;
-    ctx.shadowBlur = 15;
-
-    ctx.fillStyle = enemy.color;
-
-    ctx.beginPath();
-
-    ctx.moveTo(0, -enemy.height / 2);
-
-    ctx.lineTo(
-        enemy.width / 2,
-        enemy.height / 2
-    );
-
-    ctx.lineTo(
-        -enemy.width / 2,
-        enemy.height / 2
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-    ctx.fillStyle = "#fee2e2";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        0,
-        5,
-        enemy.width * 0.16,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-    ctx.restore();
-
-    if (enemy.maxHealth > 1) {
-
-        const barWidth = enemy.width;
-
-        const healthWidth =
-            barWidth *
-            (enemy.health / enemy.maxHealth);
-
-        ctx.fillStyle = "#450a0a";
-
-        ctx.fillRect(
-            enemy.x - barWidth / 2,
-            enemy.y - enemy.height / 2 - 8,
-            barWidth,
-            4
-        );
-
-        ctx.fillStyle = "#22c55e";
-
-        ctx.fillRect(
-            enemy.x - barWidth / 2,
-            enemy.y - enemy.height / 2 - 8,
-            healthWidth,
-            4
-        );
-    }
-}
-
-function updateEnemies(delta) {
-
-    for (
-        let i = enemies.length - 1;
-        i >= 0;
-        i--
-    ) {
-
-        const enemy = enemies[i];
-
-        enemy.y +=
-            enemy.speed * delta;
-
-        if (
-            enemy.y >
-            gameHeight + enemy.height
-        ) {
-
-            enemies.splice(i, 1);
-
-            loseLife();
-
-            continue;
-        }
-    }
-}
-
-function createExplosion(x, y, color) {
-
-    for (let i = 0; i < 20; i++) {
-
-        const angle =
-            Math.random() *
-            Math.PI *
-            2;
-
-        const speed =
-            Math.random() *
-            180 +
-            50;
-
-        particles.push({
-
-            x: x,
-            y: y,
-
-            vx:
-                Math.cos(angle) *
-                speed,
-
-            vy:
-                Math.sin(angle) *
-                speed,
-
-            life: 1,
-
-            size:
-                Math.random() * 4 + 2,
-
-            color: color
-        });
-    }
-}
-
-function updateParticles(delta) {
-
-    for (
-        let i = particles.length - 1;
-        i >= 0;
-        i--
-    ) {
-
-        const particle =
-            particles[i];
-
-        particle.x +=
-            particle.vx * delta;
-
-        particle.y +=
-            particle.vy * delta;
-
-        particle.life -=
-            delta * 2;
-
-        if (particle.life <= 0) {
-
-            particles.splice(i, 1);
-        }
-    }
-}
-
-function drawParticles() {
-
-    for (const particle of particles) {
-
-        ctx.globalAlpha =
-            Math.max(0, particle.life);
-
-        ctx.fillStyle =
-            particle.color;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            particle.x,
-            particle.y,
-            particle.size,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fill();
-    }
-
-    ctx.globalAlpha = 1;
-}
-
-function createPowerUp(x, y) {
-
-    if (Math.random() > 0.12) {
-        return;
-    }
-
-    powerUps.push({
-
-        x: x,
-        y: y,
-
-        size: 18,
-
-        speed: 100,
-
-        type:
-            Math.random() < 0.5
-                ? "shield"
-                : "power"
-    });
-}
-
-function updatePowerUps(delta) {
-
-    for (
-        let i = powerUps.length - 1;
-        i >= 0;
-        i--
-    ) {
-
-        const power =
-            powerUps[i];
-
-        power.y +=
-            power.speed * delta;
-
-        if (
-            power.y >
-            gameHeight + 30
-        ) {
-
-            powerUps.splice(i, 1);
-
-            continue;
-        }
-
-        if (
-            distance(
-                power.x,
-                power.y,
-                player.x,
-                player.y
-            ) < 40
-        ) {
-
-            if (power.type === "shield") {
-
-                player.shield = 8;
-
-            } else {
-
-                player.firePower = 2;
-
-                setTimeout(() => {
-
-                    player.firePower = 1;
-
-                }, 8000);
-            }
-
-            powerUps.splice(i, 1);
-        }
-    }
-}
-
-function drawPowerUps() {
-
-    for (const power of powerUps) {
-
-        ctx.save();
-
-        const color =
-            power.type === "shield"
-                ? "#22d3ee"
-                : "#facc15";
-
-        ctx.fillStyle = color;
-
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 15;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            power.x,
-            power.y,
-            power.size,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fill();
-
-        ctx.fillStyle = "#020617";
-
-        ctx.font =
-            "bold 16px Arial";
-
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-
-        ctx.fillText(
-            power.type === "shield"
-                ? "S"
-                : "P",
-            power.x,
-            power.y
-        );
-
-        ctx.restore();
-    }
-}
-
-function distance(x1, y1, x2, y2) {
-
-    const dx = x1 - x2;
-    const dy = y1 - y2;
-
-    return Math.sqrt(
-        dx * dx +
-        dy * dy
-    );
-}
-
-function checkBulletCollisions() {
-
-    for (
-        let i = bullets.length - 1;
-        i >= 0;
-        i--
-    ) {
-
-        const bullet =
-            bullets[i];
-
-        for (
-            let j = enemies.length - 1;
-            j >= 0;
-            j--
-        ) {
-
-            const enemy =
+</body>
+</html>
+```
