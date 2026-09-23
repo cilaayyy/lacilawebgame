@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxy Shooter</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top, #172554, #020617 65%);
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #game-wrapper {
+            width: 100%;
+            max-width: 900px;
+            padding: 15px;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            background: #020617;
+            border: 3px solid #38bdf8;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow:
+                0 0 20px #0ea5e9,
+                inset 0 0 50px #020617;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background:
+                linear-gradient(
+                    to bottom,
+                    #020617,
+                    #0f172a
+                );
+        }
+
+        #hud {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .hud-box {
+            min-width: 120px;
+            padding: 10px 15px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #38bdf8;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px #0ea5e955;
+        }
+
+        .hud-label {
+            display: block;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+
+        .hud-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #f8fafc;
+        }
+
+        #menu {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(2, 6, 23, 0.82);
+        }
+
+        .menu-card {
+            width: min(90%, 450px);
+            padding: 40px 30px;
+            text-align: center;
+            border: 2px solid #38bdf8;
+            border-radius: 20px;
+            background:
+                linear-gradient(
+                    145deg,
+                    #0f172a,
+                    #111827
+                );
+            box-shadow: 0 0 35px #0284c755;
+        }
+
+        .menu-card h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            color: #38bdf8;
+            text-shadow: 0 0 15px #0ea5e9;
+        }
+
+        .menu-card h2 {
+            margin-bottom: 15px;
+            color: #facc15;
+        }
+
+        .menu-card p {
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        button {
+            border: none;
+            outline: none;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            padding: 13px 25px;
+            background: linear-gradient(
+                135deg,
+                #0284c7,
+                #2563eb
+            );
+            box-shadow: 0 5px 15px #0284c755;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px #0284c799;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        #pause-button {
+            position: absolute;
+            right: 15px;
+            bottom: 15px;
+            z-index: 6;
+            padding: 9px 15px;
+            font-size: 13px;
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            z-index: 6;
+            color: #cbd5e1;
+            font-size: 13px;
+            background: rgba(15, 23, 42, 0.75);
+            padding: 10px 14px;
+            border-radius: 10px;
+        }
+
+        #mobile-controls {
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #level-message {
+            position: absolute;
+            left: 50%;
+            top: 45%;
+            transform: translate(-50%, -50%);
+            font-size: 42px;
+            font-weight: bold;
+            color: #facc15;
+            text-shadow: 0 0 20px #f59e0b;
+            z-index: 8;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @media (max-width: 700px) {
+            #game-container {
+                height: 85vh;
+                min-height: 500px;
+            }
+
+            .hud-box {
+                min-width: 90px;
+                padding: 7px;
+            }
+
+            .hud-label {
+                font-size: 10px;
+            }
+
+            .hud-value {
+                font-size: 16px;
+            }
+
+            .menu-card h1 {
+                font-size: 36px;
+            }
+
+            #controls {
+                display: none;
+            }
+
+            #mobile-controls {
+                position: absolute;
+                bottom: 15px;
+                left: 15px;
+                right: 80px;
+                display: flex;
+                justify-content: space-between;
+                z-index: 6;
+            }
+
+            #mobile-controls button {
+                width: 65px;
+                height: 50px;
+                padding: 0;
+                font-size: 24px;
+                background: rgba(14, 116, 144, 0.8);
+            }
+
+            #pause-button {
+                width: 55px;
+                height: 50px;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="game-wrapper">
+
+    <div id="game-container">
+
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="hud">
+
+            <div class="hud-box">
+                <span class="hud-label">SKOR</span>
+                <span class="hud-value" id="score">0</span>
+            </div>
+
+            <div class="hud-box">
+                <span class="hud-label">LEVEL</span>
+                <span class="hud-value" id="level">1</span>
+            </div>
+
+            <div class="hud-box">
+                <span class="hud-label">NYAWA</span>
+                <span class="hud-value" id="lives">3</span>
+            </div>
+
+        </div>
+
+        <div id="menu">
+
+            <div class="menu-card">
+
+                <h1>🚀</h1>
+
+                <h1>GALAXY</h1>
+
+                <h2>SHOOTER</h2>
+
+                <p>
+                    Hancurkan semua meteor dan pesawat musuh.
+                    Kumpulkan skor sebanyak mungkin dan bertahan
+                    sampai level tertinggi!
+                </p>
+
+                <button id="start-button">
+                    MULAI GAME
+                </button>
+
+            </div>
+
+        </div>
+
+        <div id="level-message">
+            LEVEL UP!
+        </div>
+
+        <div id="controls">
+            ⬅️ ➡️ Bergerak &nbsp; | &nbsp; SPACE Menembak
+        </div>
+
+        <div id="mobile-controls">
+
+            <button id="left-button">
+                ◀
+            </button>
+
+            <button id="right-button">
+                ▶
+            </button>
+
+        </div>
+
+        <button id="pause-button">
+            PAUSE
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+const gameContainer =
+    document.getElementById("game-container");
+
+const menu =
+    document.getElementById("menu");
+
+const startButton =
+    document.getElementById("start-button");
+
+const pauseButton =
+    document.getElementById("pause-button");
+
+const scoreText =
+    document.getElementById("score");
+
+const levelText =
+    document.getElementById("level");
+
+const livesText =
+    document.getElementById("lives");
+
+const levelMessage =
+    document.getElementById("level-message");
+
+const leftButton =
+    document.getElementById("left-button");
+
+const rightButton =
+    document.getElementById("right-button");
+
+let gameWidth = 800;
+let gameHeight = 700;
+
+let gameRunning = false;
+let gamePaused = false;
+
+let score = 0;
+let lives = 3;
+let level = 1;
+
+let lastTime = 0;
+
+let enemyTimer = 0;
+let enemyInterval = 900;
+
+let shotTimer = 0;
+let shotInterval = 220;
+
+let levelTimer = 0;
+
+let keys = {
+    left: false,
+    right: false,
+    shoot: false
+};
+
+let bullets = [];
+let enemies = [];
+let particles = [];
+let stars = [];
+let powerUps = [];
+
+const player = {
+    x: 400,
+    y: 620,
+    width: 45,
+    height: 50,
+    speed: 380,
+    color: "#38bdf8",
+    shield: 0,
+    firePower: 1
+};
+
+function resizeCanvas() {
+
+    const rect =
+        gameContainer.getBoundingClientRect();
+
+    const oldWidth = gameWidth;
+    const oldHeight = gameHeight;
+
+    gameWidth = rect.width;
+    gameHeight = rect.height;
+
+    canvas.width = gameWidth;
+    canvas.height = gameHeight;
+
+    if (oldWidth > 0) {
+        player.x =
+            (player.x / oldWidth) * gameWidth;
+    }
+
+    player.y =
+        gameHeight - 80;
+}
+
+function createStars() {
+
+    stars = [];
+
+    for (let i = 0; i < 100; i++) {
+
+        stars.push({
+            x: Math.random() * gameWidth,
+            y: Math.random() * gameHeight,
+            size: Math.random() * 2 + 1,
+            speed: Math.random() * 80 + 20,
+            alpha: Math.random() * 0.8 + 0.2
+        });
+    }
+}
+
+function drawStars(delta) {
+
+    for (const star of stars) {
+
+        star.y += star.speed * delta;
+
+        if (star.y > gameHeight) {
+            star.y = 0;
+            star.x = Math.random() * gameWidth;
+        }
+
+        ctx.globalAlpha = star.alpha;
+
+        ctx.fillStyle = "#ffffff";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            star.x,
+            star.y,
+            star.size,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+    }
+
+    ctx.globalAlpha = 1;
+}
+
+function drawPlayer() {
+
+    ctx.save();
+
+    ctx.translate(
+        player.x,
+        player.y
+    );
+
+    if (player.shield > 0) {
+
+        ctx.strokeStyle = "#22d3ee";
+        ctx.lineWidth = 4;
+
+        ctx.shadowColor = "#22d3ee";
+        ctx.shadowBlur = 15;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,
+            0,
+            38,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.stroke();
+    }
+
+    ctx.shadowColor = "#38bdf8";
+    ctx.shadowBlur = 15;
+
+    ctx.fillStyle = "#38bdf8";
+
+    ctx.beginPath();
+
+    ctx.moveTo(0, -28);
+    ctx.lineTo(-23, 22);
+    ctx.lineTo(0, 14);
+    ctx.lineTo(23, 22);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.fillStyle = "#e0f2fe";
+
+    ctx.beginPath();
+
+    ctx.moveTo(0, -18);
+    ctx.lineTo(-8, 5);
+    ctx.lineTo(8, 5);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.fillStyle = "#f97316";
+
+    ctx.beginPath();
+
+    ctx.moveTo(-9, 20);
+    ctx.lineTo(0, 38);
+    ctx.lineTo(9, 20);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.restore();
+}
+
+function shoot() {
+
+    if (player.firePower === 1) {
+
+        bullets.push({
+            x: player.x,
+            y: player.y - 28,
+            width: 5,
+            height: 18,
+            speed: 600,
+            color: "#facc15"
+        });
+
+    } else {
+
+        bullets.push({
+            x: player.x - 13,
+            y: player.y - 28,
+            width: 5,
+            height: 18,
+            speed: 600,
+            color: "#22d3ee"
+        });
+
+        bullets.push({
+            x: player.x + 13,
+            y: player.y - 28,
+            width: 5,
+            height: 18,
+            speed: 600,
+            color: "#22d3ee"
+        });
+    }
+}
+
+function updateBullets(delta) {
+
+    for (let i = bullets.length - 1; i >= 0; i--) {
+
+        const bullet = bullets[i];
+
+        bullet.y -= bullet.speed * delta;
+
+        if (bullet.y < -30) {
+
+            bullets.splice(i, 1);
+        }
+    }
+}
+
+function drawBullets() {
+
+    for (const bullet of bullets) {
+
+        ctx.save();
+
+        ctx.fillStyle = bullet.color;
+
+        ctx.shadowColor = bullet.color;
+        ctx.shadowBlur = 12;
+
+        ctx.fillRect(
+            bullet.x - bullet.width / 2,
+            bullet.y,
+            bullet.width,
+            bullet.height
+        );
+
+        ctx.restore();
+    }
+}
+
+function createEnemy() {
+
+    const size =
+        Math.random() * 20 + 30;
+
+    const type =
+        Math.random() < 0.15
+            ? "strong"
+            : "normal";
+
+    const enemy = {
+
+        x:
+            Math.random() *
+            (gameWidth - size * 2) +
+            size,
+
+        y:
+            -size,
+
+        width: size,
+        height: size,
+
+        speed:
+            80 +
+            Math.random() * 80 +
+            level * 15,
+
+        health:
+            type === "strong"
+                ? 3
+                : 1,
+
+        maxHealth:
+            type === "strong"
+                ? 3
+                : 1,
+
+        type: type,
+
+        color:
+            type === "strong"
+                ? "#a855f7"
+                : "#ef4444",
+
+        rotation:
+            Math.random() * Math.PI * 2,
+
+        rotationSpeed:
+            Math.random() * 3 - 1.5
+    };
+
+    enemies.push(enemy);
+}
+
+function drawEnemy(enemy) {
+
+    ctx.save();
+
+    ctx.translate(
+        enemy.x,
+        enemy.y
+    );
+
+    enemy.rotation +=
+        enemy.rotationSpeed * 0.01;
+
+    ctx.rotate(enemy.rotation);
+
+    ctx.shadowColor = enemy.color;
+    ctx.shadowBlur = 15;
+
+    ctx.fillStyle = enemy.color;
+
+    ctx.beginPath();
+
+    ctx.moveTo(0, -enemy.height / 2);
+
+    ctx.lineTo(
+        enemy.width / 2,
+        enemy.height / 2
+    );
+
+    ctx.lineTo(
+        -enemy.width / 2,
+        enemy.height / 2
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.fillStyle = "#fee2e2";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        5,
+        enemy.width * 0.16,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+    ctx.restore();
+
+    if (enemy.maxHealth > 1) {
+
+        const barWidth = enemy.width;
+
+        const healthWidth =
+            barWidth *
+            (enemy.health / enemy.maxHealth);
+
+        ctx.fillStyle = "#450a0a";
+
+        ctx.fillRect(
+            enemy.x - barWidth / 2,
+            enemy.y - enemy.height / 2 - 8,
+            barWidth,
+            4
+        );
+
+        ctx.fillStyle = "#22c55e";
+
+        ctx.fillRect(
+            enemy.x - barWidth / 2,
+            enemy.y - enemy.height / 2 - 8,
+            healthWidth,
+            4
+        );
+    }
+}
+
+function updateEnemies(delta) {
+
+    for (
+        let i = enemies.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const enemy = enemies[i];
+
+        enemy.y +=
+            enemy.speed * delta;
+
+        if (
+            enemy.y >
+            gameHeight + enemy.height
+        ) {
+
+            enemies.splice(i, 1);
+
+            loseLife();
+
+            continue;
+        }
+    }
+}
+
+function createExplosion(x, y, color) {
+
+    for (let i = 0; i < 20; i++) {
+
+        const angle =
+            Math.random() *
+            Math.PI *
+            2;
+
+        const speed =
+            Math.random() *
+            180 +
+            50;
+
+        particles.push({
+
+            x: x,
+            y: y,
+
+            vx:
+                Math.cos(angle) *
+                speed,
+
+            vy:
+                Math.sin(angle) *
+                speed,
+
+            life: 1,
+
+            size:
+                Math.random() * 4 + 2,
+
+            color: color
+        });
+    }
+}
+
+function updateParticles(delta) {
+
+    for (
+        let i = particles.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const particle =
+            particles[i];
+
+        particle.x +=
+            particle.vx * delta;
+
+        particle.y +=
+            particle.vy * delta;
+
+        particle.life -=
+            delta * 2;
+
+        if (particle.life <= 0) {
+
+            particles.splice(i, 1);
+        }
+    }
+}
+
+function drawParticles() {
+
+    for (const particle of particles) {
+
+        ctx.globalAlpha =
+            Math.max(0, particle.life);
+
+        ctx.fillStyle =
+            particle.color;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            particle.x,
+            particle.y,
+            particle.size,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+    }
+
+    ctx.globalAlpha = 1;
+}
+
+function createPowerUp(x, y) {
+
+    if (Math.random() > 0.12) {
+        return;
+    }
+
+    powerUps.push({
+
+        x: x,
+        y: y,
+
+        size: 18,
+
+        speed: 100,
+
+        type:
+            Math.random() < 0.5
+                ? "shield"
+                : "power"
+    });
+}
+
+function updatePowerUps(delta) {
+
+    for (
+        let i = powerUps.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const power =
+            powerUps[i];
+
+        power.y +=
+            power.speed * delta;
+
+        if (
+            power.y >
+            gameHeight + 30
+        ) {
+
+            powerUps.splice(i, 1);
+
+            continue;
+        }
+
+        if (
+            distance(
+                power.x,
+                power.y,
+                player.x,
+                player.y
+            ) < 40
+        ) {
+
+            if (power.type === "shield") {
+
+                player.shield = 8;
+
+            } else {
+
+                player.firePower = 2;
+
+                setTimeout(() => {
+
+                    player.firePower = 1;
+
+                }, 8000);
+            }
+
+            powerUps.splice(i, 1);
+        }
+    }
+}
+
+function drawPowerUps() {
+
+    for (const power of powerUps) {
+
+        ctx.save();
+
+        const color =
+            power.type === "shield"
+                ? "#22d3ee"
+                : "#facc15";
+
+        ctx.fillStyle = color;
+
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 15;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            power.x,
+            power.y,
+            power.size,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+        ctx.fillStyle = "#020617";
+
+        ctx.font =
+            "bold 16px Arial";
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.fillText(
+            power.type === "shield"
+                ? "S"
+                : "P",
+            power.x,
+            power.y
+        );
+
+        ctx.restore();
+    }
+}
+
+function distance(x1, y1, x2, y2) {
+
+    const dx = x1 - x2;
+    const dy = y1 - y2;
+
+    return Math.sqrt(
+        dx * dx +
+        dy * dy
+    );
+}
+
+function checkBulletCollisions() {
+
+    for (
+        let i = bullets.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const bullet =
+            bullets[i];
+
+        for (
+            let j = enemies.length - 1;
+            j >= 0;
+            j--
+        ) {
+
+            const enemy =
